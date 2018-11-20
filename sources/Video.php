@@ -1,7 +1,7 @@
 <?php
 namespace Ciebit\Videos;
 
-use Ciebit\Status;
+use Ciebit\Videos\Status;
 use DateTime;
 
 abstract class Video
@@ -25,7 +25,7 @@ abstract class Video
         $this->uri = $uri;
     }
 
-    abstract private function getType(): string;
+    abstract protected function getType(): string;
 
     public function getDatePublication(): DateTime
     {
@@ -65,35 +65,42 @@ abstract class Video
     public function setDatePublication(DateTime $datetime): self
     {
         $this->datePublication = $datetime;
+        return $this;
     }
 
     public function setDescription(string $description): self
     {
         $this->description = $description;
+        return $this;
     }
 
     public function setId(string $id): self
     {
         $this->id = $id;
+        return $this;
     }
 
     public function setSourceId(string $sourceId): self
     {
         $this->sourceId = $sourceId;
+        return $this;
     }
 
     public function setStatus(Status $status): self
     {
         $this->status = $status;
+        return $this;
     }
 
     public function setTitle(string $title): self
     {
         $this->title = $title;
+        return $this;
     }
 
     public function setUri(string $uri): self
     {
         $this->uri = $uri;
+        return $this;
     }
 }
