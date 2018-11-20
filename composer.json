@@ -27,7 +27,8 @@
     },
     "require": {
         "php": "^7.1",
-        "myclabs/php-enum": "^1.6.1"
+        "myclabs/php-enum": "^1.6.1",
+        "robmorgan/phinx": "^0.10.6"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.5"
