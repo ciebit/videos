@@ -1,0 +1,35 @@
+{
+    "name": "ciebit/videos",
+    "description": "Modulo de representacao de entidades de video",
+    "type": "library",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/ciebit/videos/issues",
+        "source": "https://github.com/ciebit/videos"
+    },
+    "authors": [
+        {
+            "name": "Johnny Saymon",
+            "email": "saymon@ciebit.com",
+            "homepage": "http://saymon.ciebit.com",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Ciebit\\Videos\\": "sources/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ciebit\\VideosTests\\": "tests/classes/"
+        }
+    },
+    "require": {
+        "php": "^7.1",
+        "myclabs/php-enum": "^1.6.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
+    }
+}
