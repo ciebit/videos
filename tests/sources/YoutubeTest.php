@@ -5,7 +5,6 @@ use DateTime;
 use Ciebit\Videos\Youtube;
 use Ciebit\Videos\Status;
 use Ciebit\VideosTests\Video as VideosTests;
-use PHPUnit\Framework\TestCase;
 
 class YoutubeTest extends VideosTests
 {

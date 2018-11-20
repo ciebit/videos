@@ -5,7 +5,6 @@ use DateTime;
 use Ciebit\Videos\File;
 use Ciebit\Videos\Status;
 use Ciebit\VideosTests\Video as VideosData;
-use PHPUnit\Framework\TestCase;
 
 class FileTest extends VideosData
 {
