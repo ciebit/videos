@@ -7,7 +7,7 @@ class File extends Video
 {
     private const TYPE = 'file';
 
-    private function getType(): string
+    protected function getType(): string
     {
         return self::TYPE;
     }
