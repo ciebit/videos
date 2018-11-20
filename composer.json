@@ -22,7 +22,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Ciebit\\VideosTests\\": "tests/classes/"
+            "Ciebit\\VideosTests\\": "tests/sources/"
         }
     },
     "require": {
