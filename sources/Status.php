@@ -1,7 +1,7 @@
 <?php
 namespace Ciebit\Videos;
 
-use MyClabs\Enum\Enum;
+use MyCLabs\Enum\Enum;
 
 class Status extends Enum
 {
