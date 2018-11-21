@@ -45,6 +45,13 @@ class SqlTest extends Connection
         $this->assertEquals(1, $video->getStatus()->getValue());
     }
 
+    public function testFilterBySource(): void
+    {
+        $database = $this->getDatabase();
+        $videos = $database->addFilterBySource('=', File::getType())->findAll();
+        $this->assertCount(3, $videos);
+    }
+
     public function testFilterBySourceId(): void
     {
         $database = $this->getDatabase();

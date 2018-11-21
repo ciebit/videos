@@ -27,6 +27,12 @@ class Sql extends SqlHelper implements Database
         return $this;
     }
 
+    public function addFilterBySource(string $operator, string ...$source): Database
+    {
+        $this->addFilterBy("`{$this->table}`.`type`", PDO::PARAM_STR, $operator, $source);
+        return $this;
+    }
+
     public function addFilterBySourceId(string $operator, string ...$ids): Database
     {
         $this->addFilterBy("`{$this->table}`.`source_id`", PDO::PARAM_STR, $operator, $ids);
