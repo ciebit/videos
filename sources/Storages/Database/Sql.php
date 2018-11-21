@@ -20,6 +20,12 @@ class Sql extends SqlHelper implements Database
         $this->table = 'cb_videos';
     }
 
+    public function addFilterById(string $operator, string ...$ids): Database
+    {
+        $this->addFilterBy("`{$this->table}`.`id`", PDO::PARAM_STR, $operator, $ids);
+        return $this;
+    }
+
     private function createVideo(array $data): Video
     {
         if ($data['date_publication'] != null) {
@@ -51,15 +57,15 @@ class Sql extends SqlHelper implements Database
 
     public function findOne(): ?Video
     {
-        $statement = $this->pdo->prepare("
-            SELECT
+        $statement = $this->pdo->prepare(
+            "SELECT
             {$this->getFields()}
             FROM {$this->table}
             {$this->generateSqlJoin()}
             WHERE {$this->generateSqlFilters()}
             {$this->generateSqlOrder()}
-            LIMIT 1
-        ");
+            LIMIT 1"
+        );
 
         $this->bind($statement);
 
