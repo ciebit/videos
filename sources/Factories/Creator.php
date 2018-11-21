@@ -44,10 +44,21 @@ class Creator
             $data['status']
         );
 
-        $data['description'] ?? $video->setDescription($data['description']);
-        $data['id'] ?? $video->setId($data['id']);
-        $data['sourceId'] ?? $video->setSourceId($data['sourceId']);
-        $data['datePublication'] ?? $video->setDatePublication($data['datePublication']);
+        if(isset($data['description'])) {
+            $video->setDescription($data['description']);
+        }
+
+        if(isset($data['id'])) {
+            $video->setId($data['id']);
+        }
+
+        if(isset($data['sourceId'])) {
+            $video->setSourceId($data['sourceId']);
+        }
+
+        if(isset($data['datePublication'])) {
+            $video->setDatePublication($data['datePublication']);
+        }
 
         return $video;
     }
