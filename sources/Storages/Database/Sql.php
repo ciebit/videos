@@ -50,6 +50,13 @@ class Sql implements Database
         return $this;
     }
 
+    public function addFilterByStatus(string $operator, Status ...$status): Database
+    {
+        $field = self::FIELD_STATUS;
+        $this->sqlHelper->addFilterBy("`{$this->table}`.`{$field}`", PDO::PARAM_INT, $operator, $status);
+        return $this;
+    }
+
     public function addFilterByUri(string $operator, string ...$uri): Database
     {
         $this->sqlHelper->addFilterBy("`{$this->table}`.`uri`", PDO::PARAM_STR, $operator, $uri);

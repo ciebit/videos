@@ -2,9 +2,10 @@
 namespace Ciebit\VideosTests\Storages\Database;
 
 use ArrayObject;
-use Ciebit\Videos\Video;
 use Ciebit\Videos\Collection;
 use Ciebit\Videos\File;
+use Ciebit\Videos\Status;
+use Ciebit\Videos\Video;
 use Ciebit\Videos\Storages\Database\Sql;
 use Ciebit\VideosTests\Connection;
 
@@ -57,6 +58,13 @@ class SqlTest extends Connection
         $database = $this->getDatabase();
         $video = $database->addFilterBySourceId('=', '33')->findOne();
         $this->assertEquals('3', $video->getId());
+    }
+
+    public function testFilterByStatus(): void
+    {
+        $database = $this->getDatabase();
+        $video = $database->addFilterByStatus('=', Status::DRAFT())->findOne();
+        $this->assertEquals('4', $video->getId());
     }
 
     public function testFilterByUri(): void

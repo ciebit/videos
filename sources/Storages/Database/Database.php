@@ -3,6 +3,7 @@ namespace Ciebit\Videos\Storages\Database;
 
 use Ciebit\Videos\Collection;
 use Ciebit\Videos\Video;
+use Ciebit\Videos\Status;
 
 interface Database
 {
@@ -11,6 +12,8 @@ interface Database
     public function addFilterBySource(string $operator, string ...$source): self;
 
     public function addFilterBySourceId(string $operator, string ...$ids): self;
+
+    public function addFilterByStatus(string $operator, Status ...$status): self;
 
     public function addFilterByUri(string $operator, string ...$uri): self;
 
