@@ -7,7 +7,7 @@ class Youtube extends Video
 {
     private const TYPE = 'youtube';
 
-    protected function getType(): string
+    public static function getType(): string
     {
         return self::TYPE;
     }

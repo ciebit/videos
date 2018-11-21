@@ -7,7 +7,7 @@ class Facebook extends Video
 {
     private const TYPE = 'facebook';
 
-    protected function getType(): string
+    public static function getType(): string
     {
         return self::TYPE;
     }

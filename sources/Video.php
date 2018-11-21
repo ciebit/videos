@@ -25,7 +25,7 @@ abstract class Video
         $this->uri = $uri;
     }
 
-    abstract protected function getType(): string;
+    abstract public static function getType(): string;
 
     public function getDatePublication(): DateTime
     {
