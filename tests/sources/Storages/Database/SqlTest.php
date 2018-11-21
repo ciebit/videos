@@ -3,6 +3,7 @@ namespace Ciebit\VideosTests\Storages\Database;
 
 use ArrayObject;
 use Ciebit\Videos\Video;
+use Ciebit\Videos\Collection;
 use Ciebit\Videos\File;
 use Ciebit\Videos\Storages\Database\Sql;
 use Ciebit\VideosTests\Connection;
@@ -20,6 +21,14 @@ class SqlTest extends Connection
         $database = $this->getDatabase();
         $video = $database->findOne();
         $this->assertInstanceOf(Video::class, $video);
+    }
+
+    public function testFindAll(): void
+    {
+        $database = $this->getDatabase();
+        $videos = $database->findAll();
+        $this->assertInstanceOf(Collection::class, $videos);
+        $this->assertCount(5, $videos);
     }
 
     public function testFilterById(): void

@@ -102,7 +102,7 @@ abstract class SqlHelper
         return implode(' AND ', $this->sqlFilters);
     }
 
-    private function generateSqlLimit(): string
+    protected function generateSqlLimit(): string
     {
         $init = (int) $this->offset;
         $sql =

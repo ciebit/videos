@@ -13,4 +13,6 @@ interface Database
     public function addFilterByUri(string $operator, string ...$uri): self;
 
     public function findOne(): ?Video;
+
+    public function findAll(): Collection;
 }

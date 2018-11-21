@@ -3,6 +3,7 @@ namespace Ciebit\Videos\Storages\Database;
 
 use PDO;
 use DateTime;
+use Ciebit\Videos\Collection;
 use Ciebit\Videos\Status;
 use Ciebit\Videos\Video;
 use Ciebit\Videos\Factories\Creator;
@@ -67,6 +68,9 @@ class Sql extends SqlHelper implements Database
         ";
     }
 
+    /**
+     * @throw Exception
+    */
     public function findOne(): ?Video
     {
         $statement = $this->pdo->prepare(
@@ -82,7 +86,7 @@ class Sql extends SqlHelper implements Database
         $this->bind($statement);
 
         if ($statement->execute() === false) {
-            throw new Exception('ciebit.videos.storages.database.get_error', 2);
+            throw new Exception('ciebit.videos.storages.database.find_error', 2);
         }
 
         $videoData = $statement->fetch(PDO::FETCH_ASSOC);
@@ -92,6 +96,44 @@ class Sql extends SqlHelper implements Database
         }
 
         return $this->createVideo($videoData);
+    }
+
+    /**
+     * @throw Exception
+    */
+    public function findAll(): Collection
+    {
+        $statement = $this->pdo->prepare(
+            "SELECT
+            {$this->getFields()}
+            FROM {$this->table}
+            {$this->generateSqlJoin()}
+            WHERE {$this->generateSqlFilters()}
+            {$this->generateSqlOrder()}
+            {$this->generateSqlLimit()}"
+        );
+
+        $this->bind($statement);
+
+        if ($statement->execute() === false) {
+            throw new Exception('ciebit.videos.storages.database.find_error', 2);
+        }
+
+        $videoCollectionData = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($videoCollectionData == false) {
+            return null;
+        }
+
+        $collection = new Collection;
+
+        foreach ($videoCollectionData as $videoData) {
+            $collection->add(
+                $this->createVideo($videoData)
+            );
+        }
+
+        return $collection;
     }
 
     public function setTable(string $table): self
