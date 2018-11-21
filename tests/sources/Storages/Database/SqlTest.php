@@ -22,7 +22,7 @@ class SqlTest extends Connection
         $this->assertInstanceOf(Video::class, $video);
     }
 
-    public function testFindById(): void
+    public function testFilterById(): void
     {
         $id = 4;
         $database = $this->getDatabase();
@@ -34,5 +34,19 @@ class SqlTest extends Connection
         $this->assertEquals('uri-video-04', $video->getUri());
         $this->assertEquals('2018-11-08 17:29:13', $video->getDatePublication()->format('Y-m-d H:i:s'));
         $this->assertEquals(1, $video->getStatus()->getValue());
+    }
+
+    public function testFilterBySourceId(): void
+    {
+        $database = $this->getDatabase();
+        $video = $database->addFilterBySourceId('=', '33')->findOne();
+        $this->assertEquals('3', $video->getId());
+    }
+
+    public function testFilterByUri(): void
+    {
+        $database = $this->getDatabase();
+        $video = $database->addFilterByUri('=', 'uri-video-02')->findOne();
+        $this->assertEquals('2', $video->getId());
     }
 }

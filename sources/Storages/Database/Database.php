@@ -8,5 +8,9 @@ interface Database
 {
     public function addFilterById(string $operator, string ...$id): self;
 
+    public function addFilterBySourceId(string $operator, string ...$ids): self;
+
+    public function addFilterByUri(string $operator, string ...$uri): self;
+
     public function findOne(): ?Video;
 }

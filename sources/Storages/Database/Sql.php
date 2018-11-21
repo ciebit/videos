@@ -26,6 +26,18 @@ class Sql extends SqlHelper implements Database
         return $this;
     }
 
+    public function addFilterBySourceId(string $operator, string ...$ids): Database
+    {
+        $this->addFilterBy("`{$this->table}`.`source_id`", PDO::PARAM_STR, $operator, $ids);
+        return $this;
+    }
+
+    public function addFilterByUri(string $operator, string ...$uri): Database
+    {
+        $this->addFilterBy("`{$this->table}`.`uri`", PDO::PARAM_STR, $operator, $uri);
+        return $this;
+    }
+
     private function createVideo(array $data): Video
     {
         if ($data['date_publication'] != null) {
