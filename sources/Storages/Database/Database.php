@@ -14,7 +14,13 @@ interface Database
 
     public function addFilterByUri(string $operator, string ...$uri): self;
 
+    public function addOrderBy(string $column, string $order = "ASC"): self;
+
     public function findAll(): Collection;
 
     public function findOne(): ?Video;
+
+    public function setLimit(int $limit): self;
+
+    public function setOffset(int $offset): self;
 }

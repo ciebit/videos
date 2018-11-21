@@ -10,38 +10,55 @@ use Ciebit\Videos\Factories\Creator;
 use Ciebit\Videos\Storages\Database\Database;
 use Ciebit\Videos\Storages\Database\SqlHelper;
 
-class Sql extends SqlHelper implements Database
+class Sql implements Database
 {
+    public const FIELD_DATE_PUBLICATION = 'date_publication';
+    public const FIELD_DESCRIPTION = 'description';
+    public const FIELD_ID = 'id';
+    public const FIELD_SOURCE = 'type';
+    public const FIELD_SOURCE_ID = 'source_id';
+    public const FIELD_STATUS = 'status';
+    public const FIELD_TITLE = 'title';
+    public const FIELD_URI = 'uri';
+
     private $pdo; # PDO
     private $table; # string
+    private $sqlHelper; # SqlHelper
 
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
+        $this->sqlHelper = new SqlHelper;
         $this->table = 'cb_videos';
     }
 
     public function addFilterById(string $operator, string ...$ids): Database
     {
-        $this->addFilterBy("`{$this->table}`.`id`", PDO::PARAM_STR, $operator, $ids);
+        $this->sqlHelper->addFilterBy("`{$this->table}`.`id`", PDO::PARAM_STR, $operator, $ids);
         return $this;
     }
 
     public function addFilterBySource(string $operator, string ...$source): Database
     {
-        $this->addFilterBy("`{$this->table}`.`type`", PDO::PARAM_STR, $operator, $source);
+        $this->sqlHelper->addFilterBy("`{$this->table}`.`type`", PDO::PARAM_STR, $operator, $source);
         return $this;
     }
 
     public function addFilterBySourceId(string $operator, string ...$ids): Database
     {
-        $this->addFilterBy("`{$this->table}`.`source_id`", PDO::PARAM_STR, $operator, $ids);
+        $this->sqlHelper->addFilterBy("`{$this->table}`.`source_id`", PDO::PARAM_STR, $operator, $ids);
         return $this;
     }
 
     public function addFilterByUri(string $operator, string ...$uri): Database
     {
-        $this->addFilterBy("`{$this->table}`.`uri`", PDO::PARAM_STR, $operator, $uri);
+        $this->sqlHelper->addFilterBy("`{$this->table}`.`uri`", PDO::PARAM_STR, $operator, $uri);
+        return $this;
+    }
+
+    public function addOrderBy(string $column, string $order = "ASC"): Database
+    {
+        $this->sqlHelper->addOrderBy("`{$this->table}`.`{$column}`", $order);
         return $this;
     }
 
@@ -83,13 +100,13 @@ class Sql extends SqlHelper implements Database
             "SELECT
             {$this->getFields()}
             FROM {$this->table}
-            {$this->generateSqlJoin()}
-            WHERE {$this->generateSqlFilters()}
-            {$this->generateSqlOrder()}
+            {$this->sqlHelper->generateSqlJoin()}
+            WHERE {$this->sqlHelper->generateSqlFilters()}
+            {$this->sqlHelper->generateSqlOrder()}
             LIMIT 1"
         );
 
-        $this->bind($statement);
+        $this->sqlHelper->bind($statement);
 
         if ($statement->execute() === false) {
             throw new Exception('ciebit.videos.storages.database.find_error', 2);
@@ -113,13 +130,13 @@ class Sql extends SqlHelper implements Database
             "SELECT
             {$this->getFields()}
             FROM {$this->table}
-            {$this->generateSqlJoin()}
-            WHERE {$this->generateSqlFilters()}
-            {$this->generateSqlOrder()}
-            {$this->generateSqlLimit()}"
+            {$this->sqlHelper->generateSqlJoin()}
+            WHERE {$this->sqlHelper->generateSqlFilters()}
+            {$this->sqlHelper->generateSqlOrder()}
+            {$this->sqlHelper->generateSqlLimit()}"
         );
 
-        $this->bind($statement);
+        $this->sqlHelper->bind($statement);
 
         if ($statement->execute() === false) {
             throw new Exception('ciebit.videos.storages.database.find_error', 2);
@@ -140,6 +157,18 @@ class Sql extends SqlHelper implements Database
         }
 
         return $collection;
+    }
+
+    public function setLimit(int $total): Database
+    {
+        $this->sqlHelper->setLimit($total);
+        return $this;
+    }
+
+    public function setOffset(int $offset): Database
+    {
+        $this->sqlHelper->setOffset($offset);
+        return $this;
     }
 
     public function setTable(string $table): self

@@ -65,4 +65,11 @@ class SqlTest extends Connection
         $video = $database->addFilterByUri('=', 'uri-video-02')->findOne();
         $this->assertEquals('2', $video->getId());
     }
+
+    public function testOrderBy(): void
+    {
+        $database = $this->getDatabase();
+        $video = $database->addOrderBy(Sql::FIELD_TITLE, 'DESC')->findOne();
+        $this->assertEquals('5', $video->getId());
+    }
 }

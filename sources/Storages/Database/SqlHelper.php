@@ -9,7 +9,7 @@ use function is_array;
 use function str_replace;
 use function strlen;
 
-abstract class SqlHelper
+class SqlHelper
 {
     private $bindList; # array
     private $limit; # ?int
@@ -19,7 +19,7 @@ abstract class SqlHelper
     private $sqlJoin; # array
     private $valueKey; # int
 
-    protected function __construct()
+    public function __construct()
     {
         $this->bindList = [];
         $this->orderBy = [];
@@ -28,7 +28,7 @@ abstract class SqlHelper
         $this->valueKey = 0;
     }
 
-    protected function addBind(string $key, int $type, $value): self
+    public function addBind(string $key, int $type, $value): self
     {
         $this->bindList[] = [
             'key' => $key,
@@ -38,7 +38,7 @@ abstract class SqlHelper
         return $this;
     }
 
-    protected function addFilterBy(string $field, int $type, string $operation, $value): self
+    public function addFilterBy(string $field, int $type, string $operation, $value): self
     {
         if (is_array($value)) {
             if (count($value) > 1) {
@@ -65,25 +65,25 @@ abstract class SqlHelper
         return $this;
     }
 
-    protected function addOrderBy(string $column, string $order = "ASC"): self
+    public function addOrderBy(string $column, string $order = "ASC"): self
     {
         $this->orderBy[] = [$column, $order];
         return $this;
     }
 
-    protected function addSqlFilter(string $sql): self
+    public function addSqlFilter(string $sql): self
     {
         $this->sqlFilters[] = $sql;
         return $this;
     }
 
-    protected function addSqlJoin(string $sql): self
+    public function addSqlJoin(string $sql): self
     {
         $this->sqlJoin[] = $sql;
         return $this;
     }
 
-    protected function bind(PDOStatement $statment): self
+    public function bind(PDOStatement $statment): self
     {
         if (! is_array($this->bindList)) {
             return $this;
@@ -94,7 +94,7 @@ abstract class SqlHelper
         return $this;
     }
 
-    protected function generateSqlFilters(): string
+    public function generateSqlFilters(): string
     {
         if (empty($this->sqlFilters)) {
             return '1';
@@ -102,7 +102,7 @@ abstract class SqlHelper
         return implode(' AND ', $this->sqlFilters);
     }
 
-    protected function generateSqlLimit(): string
+    public function generateSqlLimit(): string
     {
         $init = (int) $this->offset;
         $sql =
@@ -112,7 +112,7 @@ abstract class SqlHelper
         return $sql;
     }
 
-    protected function generateSqlJoin(): string
+    public function generateSqlJoin(): string
     {
         if (! is_array($this->sqlJoin)) {
             return '';
@@ -121,7 +121,7 @@ abstract class SqlHelper
         return implode(' ', $this->sqlJoin);
     }
 
-    protected function generateSqlOrder(): string
+    public function generateSqlOrder(): string
     {
         if (empty($this->orderBy)) {
             return '';
@@ -138,13 +138,13 @@ abstract class SqlHelper
         return ':value_'. $this->valueKey++;
     }
 
-    protected function setLimit(int $total): self
+    public function setLimit(int $total): self
     {
         $this->limit = $total;
         return $this;
     }
 
-    protected function setOffset(int $lineInit): self
+    public function setOffset(int $lineInit): self
     {
         $this->offset = $lineInit;
         return $this;
