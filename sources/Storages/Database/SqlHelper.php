@@ -50,10 +50,14 @@ abstract class SqlHelper
                     $this->addBind($key, $type, $valueItem);
                 }
                 $key = '('. implode(',', $keys) .')';
+            } else {
+                $value = $value[0];
+                $key = $this->generateValueKey();
+                $this->addBind($key, $type, $value);
             }
-            $value = $value[0];
         } else {
             $key = $this->generateValueKey();
+            $this->addBind($key, $type, $value);
         }
 
         $sql = "{$field} {$operation} {$key}";
@@ -92,10 +96,10 @@ abstract class SqlHelper
 
     protected function generateSqlFilters(): string
     {
-        if (empty($this->filtersSql)) {
+        if (empty($this->sqlFilters)) {
             return '1';
         }
-        return implode(' AND ', $this->filtersSql);
+        return implode(' AND ', $this->sqlFilters);
     }
 
     private function generateSqlLimit(): string
