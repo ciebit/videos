@@ -32,34 +32,42 @@ class Sql implements Database
         $this->table = 'cb_videos';
     }
 
+    public function addFilterByTitle(string $operator, string ...$title): Database
+    {
+        $field = self::FIELD_TITLE;
+        $this->sqlHelper->addFilterBy("`{$this->table}`.`{$field}`", PDO::PARAM_STR, $operator, ...$title);
+        return $this;
+    }
+
     public function addFilterById(string $operator, string ...$ids): Database
     {
-        $this->sqlHelper->addFilterBy("`{$this->table}`.`id`", PDO::PARAM_STR, $operator, $ids);
+        $field = self::FIELD_ID;
+        $this->sqlHelper->addFilterBy("`{$this->table}`.`{$field}`", PDO::PARAM_STR, $operator, ...$ids);
         return $this;
     }
 
     public function addFilterBySource(string $operator, string ...$source): Database
     {
-        $this->sqlHelper->addFilterBy("`{$this->table}`.`type`", PDO::PARAM_STR, $operator, $source);
+        $this->sqlHelper->addFilterBy("`{$this->table}`.`type`", PDO::PARAM_STR, $operator, ...$source);
         return $this;
     }
 
     public function addFilterBySourceId(string $operator, string ...$ids): Database
     {
-        $this->sqlHelper->addFilterBy("`{$this->table}`.`source_id`", PDO::PARAM_STR, $operator, $ids);
+        $this->sqlHelper->addFilterBy("`{$this->table}`.`source_id`", PDO::PARAM_STR, $operator, ...$ids);
         return $this;
     }
 
     public function addFilterByStatus(string $operator, Status ...$status): Database
     {
         $field = self::FIELD_STATUS;
-        $this->sqlHelper->addFilterBy("`{$this->table}`.`{$field}`", PDO::PARAM_INT, $operator, $status);
+        $this->sqlHelper->addFilterBy("`{$this->table}`.`{$field}`", PDO::PARAM_INT, $operator, ...$status);
         return $this;
     }
 
     public function addFilterByUri(string $operator, string ...$uri): Database
     {
-        $this->sqlHelper->addFilterBy("`{$this->table}`.`uri`", PDO::PARAM_STR, $operator, $uri);
+        $this->sqlHelper->addFilterBy("`{$this->table}`.`uri`", PDO::PARAM_STR, $operator, ...$uri);
         return $this;
     }
 

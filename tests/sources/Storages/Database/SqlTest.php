@@ -46,6 +46,13 @@ class SqlTest extends Connection
         $this->assertEquals(1, $video->getStatus()->getValue());
     }
 
+    public function testFilterByMultipleId(): void
+    {
+        $database = $this->getDatabase();
+        $videos = $database->addFilterById('=', 4, 5)->findAll();
+        $this->assertCount(2, $videos);
+    }
+
     public function testFilterBySource(): void
     {
         $database = $this->getDatabase();
@@ -67,6 +74,20 @@ class SqlTest extends Connection
         $this->assertEquals('4', $video->getId());
     }
 
+    public function testFilterByTitle(): void
+    {
+        $database = $this->getDatabase();
+        $video = $database->addFilterByTitle('=', 'Title Video 02')->findOne();
+        $this->assertEquals('2', $video->getId());
+    }
+
+    public function testFilterByTitleSearch(): void
+    {
+        $database = $this->getDatabase();
+        $videos = $database->addFilterByTitle('LIKE', 'Title Video%')->findAll();
+        $this->assertCount(4, $videos);
+    }
+
     public function testFilterByUri(): void
     {
         $database = $this->getDatabase();
@@ -78,6 +99,6 @@ class SqlTest extends Connection
     {
         $database = $this->getDatabase();
         $video = $database->addOrderBy(Sql::FIELD_TITLE, 'DESC')->findOne();
-        $this->assertEquals('5', $video->getId());
+        $this->assertEquals('4', $video->getId());
     }
 }
