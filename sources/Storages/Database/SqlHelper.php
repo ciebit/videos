@@ -38,29 +38,24 @@ class SqlHelper
         return $this;
     }
 
-    public function addFilterBy(string $field, int $type, string $operation, $value): self
+    public function addFilterBy(string $field, int $type, string $operator, ...$values): self
     {
-        if (is_array($value)) {
-            if (count($value) > 1) {
-                $operator = str_replace(['=', '!='], ['IN', 'NOT IN'], $operator);
-                $keys = [];
-                foreach ($value as $valueItem) {
-                    $key = $this->generateValueKey();
-                    $keys[] = $key;
-                    $this->addBind($key, $type, $valueItem);
-                }
-                $key = '('. implode(',', $keys) .')';
-            } else {
-                $value = $value[0];
+        if (count($values) > 1) {
+            $operator = str_replace(['=', '!='], ['IN', 'NOT IN'], $operator);
+            $keys = [];
+            foreach ($values as $value) {
                 $key = $this->generateValueKey();
+                $keys[] = $key;
                 $this->addBind($key, $type, $value);
             }
+            $key = '('. implode(',', $keys) .')';
         } else {
+            $values = $values[0];
             $key = $this->generateValueKey();
-            $this->addBind($key, $type, $value);
+            $this->addBind($key, $type, $values);
         }
 
-        $sql = "{$field} {$operation} {$key}";
+        $sql = "{$field} {$operator} {$key}";
         $this->addSqlFilter($sql);
         return $this;
     }
