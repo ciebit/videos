@@ -115,6 +115,11 @@ class Sql implements Database
         ";
     }
 
+    public function getTotalItems(): int
+    {
+        return (int) $this->pdo->query('SELECT FOUND_ROWS()')->fetchColumn();
+    }
+
     /**
      * @throw Exception
     */
@@ -151,7 +156,7 @@ class Sql implements Database
     public function findAll(): Collection
     {
         $statement = $this->pdo->prepare(
-            "SELECT
+            "SELECT SQL_CALC_FOUND_ROWS
             {$this->getFields()}
             FROM {$this->table}
             {$this->sqlHelper->generateSqlJoin()}

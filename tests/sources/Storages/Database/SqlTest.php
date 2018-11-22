@@ -102,6 +102,14 @@ class SqlTest extends Connection
         $this->assertEquals('2', $video->getId());
     }
 
+    public function testGetTotalItems(): void
+    {
+        $database = $this->getDatabase();
+        $video = $database->addFilterByUri('LIKE', 'uri-video-0%')->setLimit(2)->findAll();
+        $this->assertCount(2, $video);
+        $this->assertEquals(4, $database->getTotalItems());
+    }
+
     public function testOrderBy(): void
     {
         $database = $this->getDatabase();
