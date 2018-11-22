@@ -32,10 +32,11 @@ class Sql implements Database
         $this->table = 'cb_videos';
     }
 
-    public function addFilterByTitle(string $operator, string ...$title): Database
+    public function addFilterByDescription(string $operator, string ...$description): Database
     {
-        $field = self::FIELD_TITLE;
-        $this->sqlHelper->addFilterBy("`{$this->table}`.`{$field}`", PDO::PARAM_STR, $operator, ...$title);
+        $fieldName = self::FIELD_DESCRIPTION;
+        $field = "`{$this->table}`.`{$fieldName}`";
+        $this->sqlHelper->addFilterBy($field, PDO::PARAM_STR, $operator, ...$description);
         return $this;
     }
 
@@ -62,6 +63,14 @@ class Sql implements Database
     {
         $field = self::FIELD_STATUS;
         $this->sqlHelper->addFilterBy("`{$this->table}`.`{$field}`", PDO::PARAM_INT, $operator, ...$status);
+        return $this;
+    }
+
+    public function addFilterByTitle(string $operator, string ...$title): Database
+    {
+        $fieldName = self::FIELD_TITLE;
+        $field = "`{$this->table}`.`{$fieldName}`";
+        $this->sqlHelper->addFilterBy($field, PDO::PARAM_STR, $operator, ...$title);
         return $this;
     }
 
