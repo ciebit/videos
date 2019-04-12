@@ -1,88 +1,132 @@
 <?php
 namespace Ciebit\Videos\Storages\Database;
 
-use PDO;
-use DateTime;
+use Ciebit\SqlHelper\Sql as SqlHelper;
 use Ciebit\Videos\Collection;
 use Ciebit\Videos\Status;
 use Ciebit\Videos\Video;
 use Ciebit\Videos\Factories\Creator;
 use Ciebit\Videos\Storages\Database\Database;
-use Ciebit\Videos\Storages\Database\SqlHelper;
+use Ciebit\Videos\Storages\Storage;
+use DateTime;
+use PDO;
 
 class Sql implements Database
 {
-    public const FIELD_DATE_PUBLICATION = 'date_publication';
-    public const FIELD_DESCRIPTION = 'description';
-    public const FIELD_ID = 'id';
-    public const FIELD_SOURCE = 'type';
-    public const FIELD_SOURCE_ID = 'source_id';
-    public const FIELD_STATUS = 'status';
-    public const FIELD_TITLE = 'title';
-    public const FIELD_URI = 'uri';
+    /** @var string */
+    private const COLUMN_COVER_ID = 'cover_id';
 
-    private $pdo; # PDO
-    private $table; # string
-    private $sqlHelper; # SqlHelper
+    /** @var string */
+    private const COLUMN_DATE_PUBLICATION = 'date_publication';
+
+    /** @var string */
+    private const COLUMN_DESCRIPTION = 'description';
+
+    /** @var string */
+    private const COLUMN_DURATION = 'duration';
+
+    /** @var string */
+    private const COLUMN_ID = 'id';
+
+    /** @var string */
+    private const COLUMN_SOURCE = 'type';
+
+    /** @var string */
+    private const COLUMN_SOURCE_ID = 'source_id';
+
+    /** @var string */
+    private const COLUMN_STATUS = 'status';
+
+    /** @var string */
+    private const COLUMN_TITLE = 'title';
+
+    /** @var string */
+    private const COLUMN_TYPE = 'type';
+
+    /** @var string */
+    private const COLUMN_URL = 'url';
+
+    /** @var PDO */
+    private $pdo;
+
+    /** @var SqlHelper */
+    private $sqlHelper;
+
+    /** @var string */
+    private $table;
+
+    /** @var int */
+    private $totalItemsOfLastFindWithoutLimitations;
 
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
         $this->sqlHelper = new SqlHelper;
         $this->table = 'cb_videos';
+        $this->totalItemsOfLastFindWithoutLimitations = 0;
     }
 
-    public function addFilterByDescription(string $operator, string ...$description): Database
+    public function __clone()
     {
-        $fieldName = self::FIELD_DESCRIPTION;
+        $this->sqlHelper = clone $this->sqlHelper;
+    }
+
+    private function addFilter(string $fieldName, int $type, string $operator, ...$value): self
+    {
         $field = "`{$this->table}`.`{$fieldName}`";
-        $this->sqlHelper->addFilterBy($field, PDO::PARAM_STR, $operator, ...$description);
+        $this->sqlHelper->addFilterBy($field, $type, $operator, ...$value);
         return $this;
     }
 
-    public function addFilterById(string $operator, string ...$ids): Database
+    public function addFilterByDescription(string $operator, string ...$description): Storage
     {
-        $field = self::FIELD_ID;
-        $this->sqlHelper->addFilterBy("`{$this->table}`.`{$field}`", PDO::PARAM_STR, $operator, ...$ids);
+        $this->addFilter(self::COLUMN_DESCRIPTION, PDO::PARAM_STR, $operator, ...$description);
         return $this;
     }
 
-    public function addFilterBySource(string $operator, string ...$source): Database
+    public function addFilterById(string $operator, string ...$ids): Storage
     {
-        $this->sqlHelper->addFilterBy("`{$this->table}`.`type`", PDO::PARAM_STR, $operator, ...$source);
+        $ids = array_map('intval', $ids);
+        $this->addFilter(self::COLUMN_ID, PDO::PARAM_INT, $operator, ...$ids);
         return $this;
     }
 
-    public function addFilterBySourceId(string $operator, string ...$ids): Database
+    public function addFilterBySource(string $operator, string ...$source): Storage
     {
-        $this->sqlHelper->addFilterBy("`{$this->table}`.`source_id`", PDO::PARAM_STR, $operator, ...$ids);
+        $this->addFilter(self::COLUMN_TYPE, PDO::PARAM_STR, $operator, ...$source);
         return $this;
     }
 
-    public function addFilterByStatus(string $operator, Status ...$status): Database
+    public function addFilterBySourceId(string $operator, string ...$ids): Storage
     {
-        $field = self::FIELD_STATUS;
-        $this->sqlHelper->addFilterBy("`{$this->table}`.`{$field}`", PDO::PARAM_INT, $operator, ...$status);
+        $this->addFilter(self::COLUMN_SOURCE_ID, PDO::PARAM_STR, $operator, ...$ids);
         return $this;
     }
 
-    public function addFilterByTitle(string $operator, string ...$title): Database
+    public function addFilterByStatus(string $operator, Status ...$status): Storage
     {
-        $fieldName = self::FIELD_TITLE;
-        $field = "`{$this->table}`.`{$fieldName}`";
-        $this->sqlHelper->addFilterBy($field, PDO::PARAM_STR, $operator, ...$title);
+        $statusInt = array_map(function($status){
+            return (int) $status->getValue();
+        }, $status);
+        $this->addFilter(self::COLUMN_STATUS, PDO::PARAM_INT, $operator, ...$statusInt);
         return $this;
     }
 
-    public function addFilterByUri(string $operator, string ...$uri): Database
+    public function addFilterByTitle(string $operator, string ...$title): Storage
     {
-        $this->sqlHelper->addFilterBy("`{$this->table}`.`uri`", PDO::PARAM_STR, $operator, ...$uri);
+        $this->addFilter(self::COLUMN_TITLE, PDO::PARAM_STR, $operator, ...$title);
         return $this;
     }
 
-    public function addOrderBy(string $column, string $order = "ASC"): Database
+    public function addFilterByUrl(string $operator, string ...$url): Storage
     {
-        $this->sqlHelper->addOrderBy("`{$this->table}`.`{$column}`", $order);
+        $this->addFilter(self::COLUMN_URL, PDO::PARAM_STR, $operator, ...$url);
+        return $this;
+    }
+
+    public function addOrderBy(string $field, string $order = "ASC"): Storage
+    {
+        $this->sqlHelper->addOrderBy($field, $order);
         return $this;
     }
 
@@ -96,6 +140,10 @@ class Sql implements Database
             $data['sourceId'] = $data['source_id'];
         }
 
+        if ($data['cover_id'] != null) {
+            $data['coverId'] = $data['cover_id'];
+        }
+
         $data['status'] = new Status((int) $data['status']);
 
         return (new Creator)->setData($data)->create($data['type']);
@@ -104,54 +152,26 @@ class Sql implements Database
     private function getFields(): string
     {
         return "
-            `{$this->table}`.`date_publication`,
-            `{$this->table}`.`description`,
-            `{$this->table}`.`id`,
-            `{$this->table}`.`source_id`,
-            `{$this->table}`.`status`,
-            `{$this->table}`.`title`,
-            `{$this->table}`.`uri`,
-            `{$this->table}`.`type`
+            `{$this->table}`.`". self::COLUMN_COVER_ID ."`,
+            `{$this->table}`.`". self::COLUMN_DATE_PUBLICATION ."`,
+            `{$this->table}`.`". self::COLUMN_DESCRIPTION ."`,
+            `{$this->table}`.`". self::COLUMN_DURATION ."`,
+            `{$this->table}`.`". self::COLUMN_ID ."`,
+            `{$this->table}`.`". self::COLUMN_SOURCE_ID ."`,
+            `{$this->table}`.`". self::COLUMN_STATUS ."`,
+            `{$this->table}`.`". self::COLUMN_TITLE ."`,
+            `{$this->table}`.`". self::COLUMN_URL ."`,
+            `{$this->table}`.`". self::COLUMN_TYPE ."`
         ";
     }
 
-    public function getTotalItems(): int
+    public function getTotalItemsOfLastFindWithoutLimitations(): int
     {
-        return (int) $this->pdo->query('SELECT FOUND_ROWS()')->fetchColumn();
+        return $this->totalItemsOfLastFindWithoutLimitations;
     }
 
     /**
-     * @throw Exception
-    */
-    public function findOne(): ?Video
-    {
-        $statement = $this->pdo->prepare(
-            "SELECT
-            {$this->getFields()}
-            FROM {$this->table}
-            {$this->sqlHelper->generateSqlJoin()}
-            WHERE {$this->sqlHelper->generateSqlFilters()}
-            {$this->sqlHelper->generateSqlOrder()}
-            LIMIT 1"
-        );
-
-        $this->sqlHelper->bind($statement);
-
-        if ($statement->execute() === false) {
-            throw new Exception('ciebit.videos.storages.database.find_error', 2);
-        }
-
-        $videoData = $statement->fetch(PDO::FETCH_ASSOC);
-
-        if ($videoData == false) {
-            return null;
-        }
-
-        return $this->createVideo($videoData);
-    }
-
-    /**
-     * @throw Exception
+     * @throws Exception
     */
     public function findAll(): Collection
     {
@@ -171,6 +191,8 @@ class Sql implements Database
             throw new Exception('ciebit.videos.storages.database.find_error', 2);
         }
 
+        $this->updateTotalItemsWithoutFilters();
+
         $videoCollectionData = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         if ($videoCollectionData == false) {
@@ -188,13 +210,25 @@ class Sql implements Database
         return $collection;
     }
 
-    public function setLimit(int $total): Database
+    public function findOne(): ?Video
+    {
+        $storage = clone $this;
+        $videoCollection = $storage->setLimit(1)->findAll();
+
+        if (count($videoCollection) == 0) {
+            return null;
+        }
+
+        return $videoCollection->getArrayObject()->offsetGet(0);
+    }
+
+    public function setLimit(int $total): Storage
     {
         $this->sqlHelper->setLimit($total);
         return $this;
     }
 
-    public function setOffset(int $offset): Database
+    public function setOffset(int $offset): Storage
     {
         $this->sqlHelper->setOffset($offset);
         return $this;
@@ -203,6 +237,12 @@ class Sql implements Database
     public function setTable(string $table): self
     {
         $this->table = $table;
+        return $this;
+    }
+
+    private function updateTotalItemsWithoutFilters(): self
+    {
+        $this->totalItemsOfLastFindWithoutLimitations = $this->pdo->query('SELECT FOUND_ROWS()')->fetchColumn();
         return $this;
     }
 }

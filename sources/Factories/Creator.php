@@ -10,11 +10,19 @@ use Ciebit\Videos\Youtube;
 
 class Creator
 {
-    private $entities; # arrray;
-    private $data; # array
+    /** @var array */
+    private $data;
+
+    /** @var array */
+    private $entities;
 
     public function __construct()
     {
+        $this->data = [
+            'title' => '',
+            'url' => '',
+            'status' => 0
+        ];
         $this->entities = [
             Facebook::getType() => Facebook::class,
             File::getType() => File::class,
@@ -24,12 +32,12 @@ class Creator
 
     public function setData(array $data): self
     {
-        $this->data = $data;
+        $this->data = array_merge($this->data, $data);
         return $this;
     }
 
     /**
-     * @throw Exception
+     * @throws Exception
     */
     public function create(string $type): Video
     {
@@ -40,7 +48,7 @@ class Creator
         $data = $this->data;
         $video = new $this->entities[$type](
             $data['title'],
-            $data['uri'],
+            $data['url'],
             $data['status']
         );
 
@@ -52,12 +60,20 @@ class Creator
             $video->setId($data['id']);
         }
 
+        if(isset($data['coverId'])) {
+            $video->setCoverId($data['coverId']);
+        }
+
         if(isset($data['sourceId'])) {
             $video->setSourceId($data['sourceId']);
         }
 
         if(isset($data['datePublication'])) {
             $video->setDatePublication($data['datePublication']);
+        }
+
+        if(isset($data['duration'])) {
+            $video->setDuration($data['duration']);
         }
 
         return $video;

@@ -12,7 +12,7 @@ class FileTest extends VideosData
     {
         $videoFile = new File(
             self::TITLE,
-            self::URI,
+            self::URL,
             new Status(self::STATUS)
         );
         $videoFile
@@ -30,6 +30,6 @@ class FileTest extends VideosData
         $this->assertEquals(self::SOURCE_ID, $videoFile->getSourceId());
         $this->assertEquals(self::STATUS, $videoFile->getStatus()->getValue());
         $this->assertEquals(self::TITLE, $videoFile->getTitle());
-        $this->assertEquals(self::URI, $videoFile->getUri());
+        $this->assertEquals(self::URL, $videoFile->getUrl());
     }
 }

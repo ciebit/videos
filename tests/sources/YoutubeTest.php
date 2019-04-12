@@ -12,7 +12,7 @@ class YoutubeTest extends VideosTests
     {
         $videoYoutube = new Youtube(
             self::TITLE,
-            self::URI,
+            self::URL,
             new Status(self::STATUS)
         );
         $videoYoutube
@@ -32,6 +32,6 @@ class YoutubeTest extends VideosTests
         $this->assertEquals(self::SOURCE_ID, $videoYoutube->getSourceId());
         $this->assertEquals(self::STATUS, $videoYoutube->getStatus()->getValue());
         $this->assertEquals(self::TITLE, $videoYoutube->getTitle());
-        $this->assertEquals(self::URI, $videoYoutube->getUri());
+        $this->assertEquals(self::URL, $videoYoutube->getUrl());
     }
 }

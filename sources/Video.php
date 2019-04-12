@@ -31,9 +31,9 @@ abstract class Video
     private $title;
 
     /** @var string */
-    private $uri;
+    private $url;
 
-    public function __construct(string $title, string $uri, Status $status)
+    public function __construct(string $title, string $url, Status $status)
     {
         $this->coverId = '';
         $this->datePublication = new DateTime;
@@ -43,7 +43,7 @@ abstract class Video
         $this->sourceId = '';
         $this->status = $status;
         $this->title = $title;
-        $this->uri = $uri;
+        $this->url = $url;
     }
 
     abstract public static function getType(): string;
@@ -89,9 +89,9 @@ abstract class Video
         return $this->title;
     }
 
-    public function getUri(): string
+    public function getUrl(): string
     {
-        return $this->uri;
+        return $this->url;
     }
 
     public function setCoverId(string $id): self
@@ -142,9 +142,9 @@ abstract class Video
         return $this;
     }
 
-    public function setUri(string $uri): self
+    public function setUrl(string $url): self
     {
-        $this->uri = $uri;
+        $this->url = $url;
         return $this;
     }
 }

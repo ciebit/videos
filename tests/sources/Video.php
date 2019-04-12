@@ -14,5 +14,5 @@ abstract class Video extends TestCase
     protected const SOURCE_ID = '33';
     protected const STATUS = STATUS::ACTIVE;
     protected const TITLE = 'Title Test';
-    protected const URI = 'uri-test';
+    protected const URL = 'url-test';
 }
