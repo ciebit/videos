@@ -19,11 +19,15 @@ class YoutubeTest extends VideosTests
         ->setDatePublication(new DateTime(self::DATE_PUBLICATION))
         ->setDescription(self::DESCRIPTION)
         ->setId(self::ID)
+        ->setCoverId(self::COVER_ID)
+        ->setDuration(self::DURATION)
         ->setSourceId(self::SOURCE_ID)
         ;
 
+        $this->assertEquals(self::COVER_ID, $videoYoutube->getCoverId());
         $this->assertEquals(self::DATE_PUBLICATION, $videoYoutube->getDatePublication()->format('Y-m-d H:i:s'));
         $this->assertEquals(self::DESCRIPTION, $videoYoutube->getDescription());
+        $this->assertEquals(self::DURATION, $videoYoutube->getDuration());
         $this->assertEquals(self::ID, $videoYoutube->getId());
         $this->assertEquals(self::SOURCE_ID, $videoYoutube->getSourceId());
         $this->assertEquals(self::STATUS, $videoYoutube->getStatus()->getValue());

@@ -19,6 +19,8 @@ class FileTest extends VideosData
         ->setDatePublication(new DateTime(self::DATE_PUBLICATION))
         ->setDescription(self::DESCRIPTION)
         ->setId(self::ID)
+        ->setCoverId(self::COVER_ID)
+        ->setDuration(self::DURATION)
         ->setSourceId(self::SOURCE_ID)
         ;
 

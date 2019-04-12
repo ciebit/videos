@@ -6,18 +6,39 @@ use DateTime;
 
 abstract class Video
 {
-    private $datePublication; # DateTime
-    private $description; # string
-    private $id; # string
-    private $sourceId; # string
-    private $status; # Status
-    private $title; # string
-    private $uri; # string
+    /** @var string */
+    private $coverId;
+
+    /** @var DateTime */
+    private $datePublication;
+
+    /** @var string */
+    private $description;
+
+    /** @var int in seconds */
+    private $duration;
+
+    /** @var string */
+    private $id;
+
+    /** @var string */
+    private $sourceId;
+
+    /** @var Status */
+    private $status;
+
+    /** @var string */
+    private $title;
+
+    /** @var string */
+    private $uri;
 
     public function __construct(string $title, string $uri, Status $status)
     {
+        $this->coverId = '';
         $this->datePublication = new DateTime;
         $this->description = '';
+        $this->duration = 0;
         $this->id = '';
         $this->sourceId = '';
         $this->status = $status;
@@ -27,6 +48,11 @@ abstract class Video
 
     abstract public static function getType(): string;
 
+    public function getCoverId(): string
+    {
+        return $this->coverId;
+    }
+
     public function getDatePublication(): DateTime
     {
         return $this->datePublication;
@@ -35,6 +61,12 @@ abstract class Video
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    /** @var int in seconds */
+    public function getDuration(): int
+    {
+        return $this->duration;
     }
 
     public function getId(): string
@@ -62,6 +94,12 @@ abstract class Video
         return $this->uri;
     }
 
+    public function setCoverId(string $id): self
+    {
+        $this->coverId = $id;
+        return $this;
+    }
+
     public function setDatePublication(DateTime $datetime): self
     {
         $this->datePublication = $datetime;
@@ -71,6 +109,12 @@ abstract class Video
     public function setDescription(string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function setDuration(int $seconds): self
+    {
+        $this->duration = $seconds;
         return $this;
     }
 
