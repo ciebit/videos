@@ -39,9 +39,12 @@ class SqlTest extends Connection
         $video = $database->addFilterById('=', (string) $id)->findOne();
         $this->assertInstanceOf(File::class, $video);
         $this->assertEquals((string) $id, $video->getId());
+        $this->assertEquals('44', $video->getSourceId());
+        $this->assertEquals('444', $video->getCoverId());
+        $this->assertEquals(600, $video->getDuration());
         $this->assertEquals('Title Video 04', $video->getTitle());
         $this->assertEquals('Description video 04', $video->getDescription());
-        $this->assertEquals('uri-video-04', $video->getUri());
+        $this->assertEquals('uri-video-04', $video->getUrl());
         $this->assertEquals('2018-11-08 17:29:13', $video->getDatePublication()->format('Y-m-d H:i:s'));
         $this->assertEquals(1, $video->getStatus()->getValue());
     }
@@ -95,19 +98,19 @@ class SqlTest extends Connection
         $this->assertCount(4, $videos);
     }
 
-    public function testFilterByUri(): void
+    public function testFilterByUrl(): void
     {
         $database = $this->getDatabase();
-        $video = $database->addFilterByUri('=', 'uri-video-02')->findOne();
+        $video = $database->addFilterByUrl('=', 'uri-video-02')->findOne();
         $this->assertEquals('2', $video->getId());
     }
 
     public function testGetTotalItems(): void
     {
         $database = $this->getDatabase();
-        $video = $database->addFilterByUri('LIKE', 'uri-video-0%')->setLimit(2)->findAll();
+        $video = $database->addFilterByUrl('LIKE', 'uri-video-0%')->setLimit(2)->findAll();
         $this->assertCount(2, $video);
-        $this->assertEquals(4, $database->getTotalItems());
+        $this->assertEquals(4, $database->getTotalItemsOfLastFindWithoutLimitations());
     }
 
     public function testOrderBy(): void

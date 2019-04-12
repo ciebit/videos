@@ -6,26 +6,52 @@ use DateTime;
 
 abstract class Video
 {
-    private $datePublication; # DateTime
-    private $description; # string
-    private $id; # string
-    private $sourceId; # string
-    private $status; # Status
-    private $title; # string
-    private $uri; # string
+    /** @var string */
+    private $coverId;
 
-    public function __construct(string $title, string $uri, Status $status)
+    /** @var DateTime */
+    private $datePublication;
+
+    /** @var string */
+    private $description;
+
+    /** @var int in seconds */
+    private $duration;
+
+    /** @var string */
+    private $id;
+
+    /** @var string */
+    private $sourceId;
+
+    /** @var Status */
+    private $status;
+
+    /** @var string */
+    private $title;
+
+    /** @var string */
+    private $url;
+
+    public function __construct(string $title, string $url, Status $status)
     {
+        $this->coverId = '';
         $this->datePublication = new DateTime;
         $this->description = '';
+        $this->duration = 0;
         $this->id = '';
         $this->sourceId = '';
         $this->status = $status;
         $this->title = $title;
-        $this->uri = $uri;
+        $this->url = $url;
     }
 
     abstract public static function getType(): string;
+
+    public function getCoverId(): string
+    {
+        return $this->coverId;
+    }
 
     public function getDatePublication(): DateTime
     {
@@ -35,6 +61,12 @@ abstract class Video
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    /** @var int in seconds */
+    public function getDuration(): int
+    {
+        return $this->duration;
     }
 
     public function getId(): string
@@ -57,9 +89,15 @@ abstract class Video
         return $this->title;
     }
 
-    public function getUri(): string
+    public function getUrl(): string
     {
-        return $this->uri;
+        return $this->url;
+    }
+
+    public function setCoverId(string $id): self
+    {
+        $this->coverId = $id;
+        return $this;
     }
 
     public function setDatePublication(DateTime $datetime): self
@@ -71,6 +109,12 @@ abstract class Video
     public function setDescription(string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function setDuration(int $seconds): self
+    {
+        $this->duration = $seconds;
         return $this;
     }
 
@@ -98,9 +142,9 @@ abstract class Video
         return $this;
     }
 
-    public function setUri(string $uri): self
+    public function setUrl(string $url): self
     {
-        $this->uri = $uri;
+        $this->url = $url;
         return $this;
     }
 }

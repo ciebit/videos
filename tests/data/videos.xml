@@ -3,17 +3,21 @@
     <table name="cb_videos">
         <column>id</column>
         <column>source_id</column>
+        <column>cover_id</column>
         <column>title</column>
         <column>description</column>
-        <column>uri</column>
+        <column>duration</column>
+        <column>url</column>
         <column>type</column>
         <column>date_publication</column>
         <column>status</column>
         <row>
             <value>1</value>
             <value>11</value>
+            <value>111</value>
             <value>Title Video 01</value>
             <value>Description video 01</value>
+            <value>70</value>
             <value>uri-video-01</value>
             <value>youtube</value>
             <value>2018-11-21 15:44:23</value>
@@ -22,7 +26,9 @@
         <row>
             <value>2</value>
             <null/>
+            <null/>
             <value>Title Video 02</value>
+            <null/>
             <null/>
             <value>uri-video-02</value>
             <value>file</value>
@@ -32,8 +38,10 @@
         <row>
             <value>3</value>
             <value>33</value>
+            <value>333</value>
             <value>Title Video 03</value>
             <null/>
+            <value>59</value>
             <value>uri-video-03</value>
             <value>facebook</value>
             <value>2018-10-12 20:22:21</value>
@@ -42,8 +50,10 @@
         <row>
             <value>4</value>
             <value>44</value>
+            <value>444</value>
             <value>Title Video 04</value>
             <value>Description video 04</value>
+            <value>600</value>
             <value>uri-video-04</value>
             <value>file</value>
             <value>2018-11-08 17:29:13</value>
@@ -52,8 +62,10 @@
         <row>
             <value>5</value>
             <null/>
+            <null/>
             <value>Title Five Video</value>
             <value>Description five video</value>
+            <value>1500</value>
             <value>uri-video-five</value>
             <value>file</value>
             <null/>

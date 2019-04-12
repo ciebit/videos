@@ -12,13 +12,15 @@ class FacebookTest extends VideosTests
     {
         $videoFacebook = new Facebook(
             self::TITLE,
-            self::URI,
+            self::URL,
             new Status(self::STATUS)
         );
         $videoFacebook
         ->setDatePublication(new DateTime(self::DATE_PUBLICATION))
         ->setDescription(self::DESCRIPTION)
         ->setId(self::ID)
+        ->setCoverId(self::COVER_ID)
+        ->setDuration(self::DURATION)
         ->setSourceId(self::SOURCE_ID)
         ;
 
@@ -28,6 +30,6 @@ class FacebookTest extends VideosTests
         $this->assertEquals(self::SOURCE_ID, $videoFacebook->getSourceId());
         $this->assertEquals(self::STATUS, $videoFacebook->getStatus()->getValue());
         $this->assertEquals(self::TITLE, $videoFacebook->getTitle());
-        $this->assertEquals(self::URI, $videoFacebook->getUri());
+        $this->assertEquals(self::URL, $videoFacebook->getUrL());
     }
 }
