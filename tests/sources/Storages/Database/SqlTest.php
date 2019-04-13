@@ -32,6 +32,14 @@ class SqlTest extends Connection
         $this->assertCount(5, $videos);
     }
 
+    public function testFindAllBugNull(): void
+    {
+        $database = $this->getDatabase();
+        $videos = $database->addFilterById('=', 'test')->findAll();
+        $this->assertInstanceOf(Collection::class, $videos);
+        $this->assertCount(0, $videos);
+    }
+
     public function testFilterById(): void
     {
         $id = 4;

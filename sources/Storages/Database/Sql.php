@@ -193,13 +193,13 @@ class Sql implements Database
 
         $this->updateTotalItemsWithoutFilters();
 
+        $collection = new Collection;
+
         $videoCollectionData = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         if ($videoCollectionData == false) {
-            return null;
+            return $collection;
         }
-
-        $collection = new Collection;
 
         foreach ($videoCollectionData as $videoData) {
             $collection->add(
