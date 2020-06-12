@@ -9,54 +9,27 @@ use Ciebit\Videos\Factories\Creator;
 use Ciebit\Videos\Storages\Database\Database;
 use Ciebit\Videos\Storages\Storage;
 use DateTime;
+use Exception;
 use PDO;
 
 class Sql implements Database
 {
-    /** @var string */
     private const COLUMN_COVER_ID = 'cover_id';
-
-    /** @var string */
     private const COLUMN_DATE_PUBLICATION = 'date_publication';
-
-    /** @var string */
     private const COLUMN_DESCRIPTION = 'description';
-
-    /** @var string */
     private const COLUMN_DURATION = 'duration';
-
-    /** @var string */
     private const COLUMN_ID = 'id';
-
-    /** @var string */
     private const COLUMN_SOURCE = 'type';
-
-    /** @var string */
     private const COLUMN_SOURCE_ID = 'source_id';
-
-    /** @var string */
     private const COLUMN_STATUS = 'status';
-
-    /** @var string */
     private const COLUMN_TITLE = 'title';
-
-    /** @var string */
     private const COLUMN_TYPE = 'type';
-
-    /** @var string */
     private const COLUMN_URL = 'url';
 
-    /** @var PDO */
-    private $pdo;
-
-    /** @var SqlHelper */
-    private $sqlHelper;
-
-    /** @var string */
-    private $table;
-
-    /** @var int */
-    private $totalItemsOfLastFindWithoutLimitations;
+    private PDO $pdo;
+    private SqlHelper $sqlHelper;
+    private string $table;
+    private int $totalItemsOfLastFindWithoutLimitations;
 
     public function __construct(PDO $pdo)
     {
@@ -238,6 +211,50 @@ class Sql implements Database
     {
         $this->table = $table;
         return $this;
+    }
+
+    public function store(Video $video): string
+    {
+        $fields = implode('`,`', [
+            self::COLUMN_COVER_ID,
+            self::COLUMN_DATE_PUBLICATION,
+            self::COLUMN_DESCRIPTION,
+            self::COLUMN_DURATION,
+            self::COLUMN_SOURCE_ID,
+            self::COLUMN_STATUS,
+            self::COLUMN_TITLE,
+            self::COLUMN_TYPE,
+            self::COLUMN_URL
+        ]);
+
+        $sqlQuery = "
+            INSERT INTO `{$this->table}` 
+            (`{$fields}`) 
+            VALUES 
+            (
+                :cover_id, :date_publication, :description, 
+                :duration, :source_id, :status, 
+                :title, :type, :url
+            )
+        ";
+
+        $statement = $this->pdo->prepare($sqlQuery);
+
+        $statement->bindValue(':cover_id', $video->getCoverId(), PDO::PARAM_INT);
+        $statement->bindValue(':date_publication', $video->getDatePublication()->format('Y-m-d H:i:s'), PDO::PARAM_STR);
+        $statement->bindValue(':description', $video->getDescription(), PDO::PARAM_STR);
+        $statement->bindValue(':duration', $video->getDuration(), PDO::PARAM_INT);
+        $statement->bindValue(':source_id', $video->getSourceId(), PDO::PARAM_INT);
+        $statement->bindValue(':status', $video->getStatus()->getValue(), PDO::PARAM_INT);
+        $statement->bindValue(':title', $video->getTitle(), PDO::PARAM_STR);
+        $statement->bindValue(':type', $video->getType(), PDO::PARAM_INT);
+        $statement->bindValue(':url', $video->getUrl(), PDO::PARAM_STR);
+
+        if ($statement->execute() === false) {
+            throw new Exception('ciebit.videos.storages.database.storage-error', 3);
+        }
+
+        return $this->pdo->lastInsertId();
     }
 
     private function updateTotalItemsWithoutFilters(): self

@@ -127,4 +127,12 @@ class SqlTest extends Connection
         $video = $database->addOrderBy(Sql::FIELD_TITLE, 'DESC')->findOne();
         $this->assertEquals('4', $video->getId());
     }
+
+    public function testStore(): void
+    {
+        $video = new File('title video file', 'file.mp4', new Status(Status::ACTIVE));
+        $database = $this->getDatabase();
+        $id = $database->store($video);
+        $this->assertNotEquals('', $id);
+    }
 }

@@ -7,31 +7,14 @@ use Ciebit\Videos\Status;
 
 interface Storage
 {
-    /** @var string */
     public const FIELD_DATE_PUBLICATION = 'date_publication';
-
-    /** @var string */
     public const FIELD_DESCRIPTION = 'description';
-
-    /** @var string */
     public const FIELD_ID = 'id';
-
-    /** @var string */
     public const FIELD_SOURCE = 'type';
-
-    /** @var string */
     public const FIELD_SOURCE_ID = 'source_id';
-
-    /** @var string */
     public const FIELD_STATUS = 'status';
-
-    /** @var string */
     public const FIELD_TITLE = 'title';
-
-    /** @var string */
     public const FIELD_TYPE = 'type';
-
-    /** @var string */
     public const FIELD_URL = 'url';
 
     public function addFilterByDescription(string $operator, string ...$description): self;
@@ -59,4 +42,6 @@ interface Storage
     public function setLimit(int $limit): self;
 
     public function setOffset(int $offset): self;
+
+    public function store(Video $video): string;
 }
