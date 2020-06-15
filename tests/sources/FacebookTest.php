@@ -31,5 +31,6 @@ class FacebookTest extends VideosTests
         $this->assertEquals(self::STATUS, $videoFacebook->getStatus()->getValue());
         $this->assertEquals(self::TITLE, $videoFacebook->getTitle());
         $this->assertEquals(self::URL, $videoFacebook->getUrL());
+        $this->assertEquals(Facebook::getType(), $videoFacebook->getType());
     }
 }

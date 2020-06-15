@@ -31,5 +31,6 @@ class FileTest extends VideosData
         $this->assertEquals(self::STATUS, $videoFile->getStatus()->getValue());
         $this->assertEquals(self::TITLE, $videoFile->getTitle());
         $this->assertEquals(self::URL, $videoFile->getUrl());
+        $this->assertEquals(File::getType(), $videoFile->getType());
     }
 }

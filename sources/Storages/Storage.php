@@ -44,4 +44,6 @@ interface Storage
     public function setOffset(int $offset): self;
 
     public function store(Video $video): string;
+
+    public function update(Video $video): self;
 }

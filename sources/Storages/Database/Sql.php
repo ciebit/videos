@@ -247,7 +247,7 @@ class Sql implements Database
         $statement->bindValue(':source_id', $video->getSourceId(), PDO::PARAM_INT);
         $statement->bindValue(':status', $video->getStatus()->getValue(), PDO::PARAM_INT);
         $statement->bindValue(':title', $video->getTitle(), PDO::PARAM_STR);
-        $statement->bindValue(':type', $video->getType(), PDO::PARAM_INT);
+        $statement->bindValue(':type', $video->getType(), PDO::PARAM_STR);
         $statement->bindValue(':url', $video->getUrl(), PDO::PARAM_STR);
 
         if ($statement->execute() === false) {
@@ -255,6 +255,49 @@ class Sql implements Database
         }
 
         return $this->pdo->lastInsertId();
+    }
+
+    public function update(Video $video): self
+    {
+        $columns = [
+            self::COLUMN_COVER_ID,
+            self::COLUMN_DATE_PUBLICATION,
+            self::COLUMN_DESCRIPTION,
+            self::COLUMN_DURATION,
+            self::COLUMN_SOURCE_ID,
+            self::COLUMN_STATUS,
+            self::COLUMN_TITLE,
+            self::COLUMN_TYPE,
+            self::COLUMN_URL
+        ];
+        $fieldId = self::COLUMN_ID;
+        $fieldsSql = '';
+
+        foreach($columns as $column) {
+            $fieldsSql.= "`{$column}` = :{$column},";
+        }
+        $fieldsSql = substr($fieldsSql, 0, -1);
+
+        $sqlQuery = "UPDATE {$this->table} SET {$fieldsSql} WHERE `{$fieldId}` = :id";
+
+        $statement = $this->pdo->prepare($sqlQuery);
+
+        $statement->bindValue(':'.self::COLUMN_COVER_ID, $video->getCoverId(), PDO::PARAM_INT);
+        $statement->bindValue(':'.self::COLUMN_DATE_PUBLICATION, $video->getDatePublication()->format('Y-m-d H:i:s'), PDO::PARAM_STR);
+        $statement->bindValue(':'.self::COLUMN_DESCRIPTION, $video->getDescription(), PDO::PARAM_STR);
+        $statement->bindValue(':'.self::COLUMN_DURATION, $video->getDuration(), PDO::PARAM_INT);
+        $statement->bindValue(':'.self::COLUMN_SOURCE_ID, $video->getSourceId(), PDO::PARAM_INT);
+        $statement->bindValue(':'.self::COLUMN_STATUS, $video->getStatus()->getValue(), PDO::PARAM_INT);
+        $statement->bindValue(':'.self::COLUMN_TITLE, $video->getTitle(), PDO::PARAM_STR);
+        $statement->bindValue(':'.self::COLUMN_TYPE, $video->getType(), PDO::PARAM_STR);
+        $statement->bindValue(':'.self::COLUMN_URL, $video->getUrl(), PDO::PARAM_STR);
+        $statement->bindValue(':id', $video->getId(), PDO::PARAM_INT);
+
+        if ($statement->execute() === false) {
+            throw new Exception('ciebit.videos.storages.database.update-error', 4);
+        }
+
+        return $this;
     }
 
     private function updateTotalItemsWithoutFilters(): self

@@ -33,5 +33,6 @@ class YoutubeTest extends VideosTests
         $this->assertEquals(self::STATUS, $videoYoutube->getStatus()->getValue());
         $this->assertEquals(self::TITLE, $videoYoutube->getTitle());
         $this->assertEquals(self::URL, $videoYoutube->getUrl());
+        $this->assertEquals(Youtube::getType(), $videoYoutube->getType());
     }
 }

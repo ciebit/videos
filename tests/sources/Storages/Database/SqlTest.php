@@ -8,6 +8,7 @@ use Ciebit\Videos\Status;
 use Ciebit\Videos\Video;
 use Ciebit\Videos\Storages\Database\Sql;
 use Ciebit\VideosTests\Connection;
+use DateTime;
 
 class SqlTest extends Connection
 {
@@ -130,9 +131,62 @@ class SqlTest extends Connection
 
     public function testStore(): void
     {
-        $video = new File('title video file', 'file.mp4', new Status(Status::ACTIVE));
+        $title = 'title video file';
+        $url = 'file.mp4';
+        $status = new Status(Status::ACTIVE);
+        $dateTimePublication = new DateTime('2020-06-15 10:11:00');
+        $description = 'Description Store';
+        $durationInSeconds = 124;
+        $sourceId = '5';
+        $coverId = '4';
+
+        $video = (new File($title, $url, $status))
+            ->setDatePublication($dateTimePublication)
+            ->setDescription($description)
+            ->setDuration($durationInSeconds)
+            ->setCoverId($coverId)
+            ->setSourceId($sourceId)
+            ->setDescription($description);
+
         $database = $this->getDatabase();
         $id = $database->store($video);
-        $this->assertNotEquals('', $id);
+
+        $videoStored = $database->addFilterById('=', $id)->findOne();
+
+        $this->assertEquals($id, $videoStored->getId());
+        $this->assertEquals($title, $videoStored->getTitle());
+        $this->assertEquals($description, $videoStored->getDescription());
+        $this->assertEquals($dateTimePublication, $videoStored->getDatePublication());
+        $this->assertEquals($status, $videoStored->getStatus());
+        $this->assertEquals($sourceId, $videoStored->getSourceId());
+        $this->assertEquals($durationInSeconds, $videoStored->getDuration());
+        $this->assertEquals($url, $videoStored->getUrl());
+    }
+
+    public function testUpdate(): void
+    {
+        $title = 'title video file';
+        $url = 'file.mp4';
+        $status = new Status(Status::ACTIVE);
+        $dateTimePublication = new DateTime('2020-06-15 10:11:00');
+        $description = 'Description Store';
+        $durationInSeconds = 124;
+        $sourceId = '44';
+        $coverId = '4';
+
+        $video = (new File($title, $url, $status))
+            ->setDatePublication($dateTimePublication)
+            ->setDescription($description)
+            ->setDuration($durationInSeconds)
+            ->setCoverId($coverId)
+            ->setSourceId($sourceId)
+            ->setDescription($description)
+            ->setId('3');
+
+        $database = $this->getDatabase();
+        $database->update($video);
+        $videoUpdated = $database->addFilterById('=', '3')->findOne();
+
+        $this->assertEquals($video, $videoUpdated);
     }
 }
